@@ -159,4 +159,4 @@ def chat(message, history):
     return response.choices[0].message.content
 
 # Launch Gradio interface
-gr.ChatInterface(chat, type="messages").launch()
+gr.ChatInterface(chat, type="messages").launch(share=True)
