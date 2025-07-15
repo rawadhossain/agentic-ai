@@ -80,31 +80,6 @@ sales_picker = Agent(
 
 async def run_sales_picker():
     message = "Write a cold sales email"
-    with trace("Selection from sales people"):
-        results = await asyncio.gather(
-            Runner.run(sales_agent1, message),
-            Runner.run(sales_agent2, message),
-            Runner.run(sales_agent3, message)
-        )
-
-        outputs = [result.final_output for result in results]
-        for output in outputs:
-            print(output + "\n\n")
-
-# Call the asynchronous function
-# asyncio.run(run_sales_picker())
-
-
-async def run_sales_picker():
-    sales_picker = Agent(
-        name="sales_picker",
-        instructions="You pick the best cold sales email from the given options. \
-Imagine you are a customer and pick the one you are most likely to respond to. \
-Do not give an explanation; reply with the selected email only.",
-        model="gpt-4o-mini"
-    )
-
-    message = "Write a cold sales email"
 
     with trace("Selection from sales people"):
         results = await asyncio.gather(
@@ -112,6 +87,7 @@ Do not give an explanation; reply with the selected email only.",
             Runner.run(sales_agent2, message),
             Runner.run(sales_agent3, message),
         )
+
         outputs = [result.final_output for result in results]
 
         emails = "Cold sales emails:\n\n".join(outputs)
@@ -119,3 +95,8 @@ Do not give an explanation; reply with the selected email only.",
         best = await Runner.run(sales_picker, emails)
 
         print(f"Best sales email:\n{best.final_output}")
+
+
+if __name__ == "__main__":
+    asyncio.run(run_sales_agents())
+    asyncio.run(run_sales_picker())
