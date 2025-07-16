@@ -9,6 +9,8 @@ import asyncio
 
 load_dotenv(override=True)
 
+# Sends a static test email using SendGrid API.
+# Verifies if the email setup works by sending to ed.donner@gmail.com.
 def send_test_email():
     sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
     from_email = Email("ed@edwarddonner.com")  # Change to your verified sender
@@ -20,6 +22,7 @@ def send_test_email():
 
 send_test_email()
 
+# This script defines three sales agents with different styles of writing cold emails.
 instructions1 = "You are a sales agent working for ComplAI, \
 a company that provides a SaaS tool for ensuring SOC2 compliance and preparing for audits, powered by AI. \
 You write professional, serious cold emails."
@@ -32,6 +35,7 @@ instructions3 = "You are a busy sales agent working for ComplAI, \
 a company that provides a SaaS tool for ensuring SOC2 compliance and preparing for audits, powered by AI. \
 You write concise, to the point cold emails."
 
+# Define AI Sales Agents
 sales_agent1 = Agent(
         name="Professional Sales Agent",
         instructions=instructions1,
@@ -50,8 +54,10 @@ sales_agent3 = Agent(
     model="gpt-4o-mini"
 )
 
+# run_sales_agents() → Run One Streamed, Then All in Parallel
 async def run_sales_agents():
     result = Runner.run_streamed(sales_agent1, input="Write a cold sales email")
+    
     async for event in result.stream_events():
         if event.type == "raw_response_event" and isinstance(event.data, ResponseTextDeltaEvent):
             print(event.data.delta, end="", flush=True)
@@ -70,6 +76,7 @@ async def run_sales_agents():
         for output in outputs:
             print(output + "\n\n")
 
+# run_sales_picker() → Let an Agent Pick the Best Email
 sales_picker = Agent(
     name="sales_picker",
     instructions="You pick the best cold sales email from the given options. "
