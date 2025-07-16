@@ -80,5 +80,3 @@ async def run_sales_manager():
     with trace("Sales manager"):
         result = await Runner.run(sales_manager, message)
         return result
-
-
